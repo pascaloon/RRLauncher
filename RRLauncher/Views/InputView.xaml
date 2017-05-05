@@ -12,13 +12,22 @@
             <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <TextBox Grid.Row="0" Text="{Binding Input, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-            <TextBox.InputBindings>
-                <KeyBinding Key="Enter" Command="{Binding Path=ExecuteCommand}" />
-                <KeyBinding Key="Up" Command="{Binding Path=PreviousCommand}" />
-                <KeyBinding Key="Down" Command="{Binding Path=NextCommand}" />
-            </TextBox.InputBindings>
-        </TextBox>
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Text="{Binding MasterCommand}" />
+            <TextBox Grid.Column="1" Text="{Binding Input, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                <TextBox.InputBindings>
+                    <KeyBinding Key="Enter" Command="{Binding Path=ExecuteCommand}" />
+                    <KeyBinding Key="Up" Command="{Binding Path=PreviousCommand}" />
+                    <KeyBinding Key="Down" Command="{Binding Path=NextCommand}" />
+                    <KeyBinding Key="Tab" Command="{Binding Path=SubCommand}" />
+                </TextBox.InputBindings>
+            </TextBox>
+        </Grid>
+        
         <ListBox Grid.Row="1" ItemsSource="{Binding Results}" SelectedItem="{Binding SelectedCommand}" SelectedIndex="{Binding SelectedIndex}">
             <ListBox.InputBindings>
                 <KeyBinding Key="Enter" Command="{Binding Path=ExecuteCommand}" />

@@ -8,18 +8,16 @@ namespace RRLauncherAPI.Models
 {
     public class CommandAttribute : Attribute
     {
-        public CommandAttribute(string name)
+        public CommandAttribute()
         {
-            Name = name;
         }
 
-        public String Name { get; set; }
+        public bool Dynamic { get; set; } = false;
     }
 
     public class CommandInfo
     {
         public CommandAttribute Info { get; set; }
-        public Type Type { get; set; }
-        public override string ToString() => Info.Name;
+        public Command Command { get; set; }
     }
 }

@@ -20,5 +20,7 @@ namespace RRLauncherAPI.Models
         public abstract void Execute();
 
         public override string ToString() => Name;
+
+        public virtual List<Command> GetSubCommands(string input) => new List<Command>();
     }
 }

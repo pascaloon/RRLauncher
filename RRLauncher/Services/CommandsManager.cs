@@ -13,7 +13,7 @@ namespace RRLauncher.Services
     public class CommandsManager
     {
         private readonly ConfigLoader _config;
-        public List<CommandInfo> Commands { get; set; }
+        public List<Command> Commands { get; set; }
         public CommandsManager(ConfigLoader config)
         {
             _config = config;
@@ -33,24 +33,36 @@ namespace RRLauncher.Services
                     .Select(assembly => assembly.GetExportedTypes())
                     .SelectMany(x => x)
                     .Where(t => t.IsSubclassOf(typeof(Command)))
-                    .Select(t => new CommandInfo()
+                    .Select(t => new
                     {
                         Info = (CommandAttribute) t.GetCustomAttribute(typeof(CommandAttribute)),
                         Type = t
-                    }).ToList();
-            }
+                    })
+                    .Where(info => !info.Info.Dynamic)
+                    .Select(c => c.Type)
+                    .Select(InstanciateCommand)
+                    .ToList();
+        }
 
-        public List<CommandInfo> FindCommands(String name)
+        public List<Command> FindCommands(String name)
         {
             if (Commands == null || String.IsNullOrWhiteSpace(name))
-                return new List<CommandInfo>();
-            return Commands.Where(c => c.Info.Name.ToLower().Contains(name.ToLower())).ToList();
+                return new List<Command>();
+            return Commands.Where(c => c.Name.ToLower().Contains(name.ToLower())).ToList();
         }
 
-        public void ExecuteCommand(CommandInfo commandInfo)
+        public Command InstanciateCommand(Type commandType) => (Command)Activator.CreateInstance(commandType);
+
+        public List<Command> FindSubCommands(Command instance, String input)
         {
-            Command instance = (Command) Activator.CreateInstance(commandInfo.Type);
-            instance.Execute();
+            if (instance == null)
+                return new List<Command>();
+            return instance.GetSubCommands(input);
         }
+
+
+        public void ExecuteCommand(Command command) => command?.Execute();
+
+
     }
 }
