@@ -1,0 +1,30 @@
+﻿<UserControl x:Class="RRLauncher.Views.InputView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:RRLauncher.Views"
+             mc:Ignorable="d" 
+             DataContext="{Binding Input, Source={StaticResource Locator}}"
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <TextBox Grid.Row="0" Text="{Binding Input, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+            <TextBox.InputBindings>
+                <KeyBinding Key="Enter" Command="{Binding Path=ExecuteCommand}" />
+                <KeyBinding Key="Up" Command="{Binding Path=PreviousCommand}" />
+                <KeyBinding Key="Down" Command="{Binding Path=NextCommand}" />
+            </TextBox.InputBindings>
+        </TextBox>
+        <ListBox Grid.Row="1" ItemsSource="{Binding Results}" SelectedItem="{Binding SelectedCommand}" SelectedIndex="{Binding SelectedIndex}">
+            <ListBox.InputBindings>
+                <KeyBinding Key="Enter" Command="{Binding Path=ExecuteCommand}" />
+                <KeyBinding Key="Up" Command="{Binding Path=PreviousCommand}" />
+                <KeyBinding Key="Down" Command="{Binding Path=NextCommand}" />
+            </ListBox.InputBindings>
+        </ListBox>
+    </Grid>
+</UserControl>

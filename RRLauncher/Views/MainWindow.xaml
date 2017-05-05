@@ -1,0 +1,17 @@
+﻿<Window x:Class="RRLauncher.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:RRLauncher"
+        mc:Ignorable="d"
+        xmlns:v="clr-namespace:RRLauncher.Views"
+        DataContext="{Binding Main, Source={StaticResource Locator}}"
+        Title="RRLauncher" Height="350" Width="525">
+    <Window.Resources>
+        <ResourceDictionary Source="../Resources/Theme.xaml"/>
+    </Window.Resources>
+    <Grid>
+        <v:InputView />
+    </Grid>
+</Window>
