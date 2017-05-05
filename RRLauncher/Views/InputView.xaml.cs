@@ -22,7 +22,13 @@ namespace RRLauncher.Views
     {
         public InputView()
         {
+            Loaded += InputView_Loaded;
             InitializeComponent();
+        }
+
+        private void InputView_Loaded(object sender, RoutedEventArgs e)
+        {
+            tbInput.Focus();
         }
     }
 }

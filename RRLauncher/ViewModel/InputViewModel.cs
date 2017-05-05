@@ -18,7 +18,8 @@ namespace RRLauncher.ViewModel
         public RelayCommand ExecuteCommand { get; set; }
         public RelayCommand PreviousCommand { get; set; }
         public RelayCommand NextCommand { get; set; }
-        public RelayCommand SubCommand { get; set; }
+        public RelayCommand ChainCommand { get; set; }
+        public RelayCommand UnchainCommand { get; set; }
         
         public InputViewModel(CommandsManager _commandsManager)
         {
@@ -28,23 +29,33 @@ namespace RRLauncher.ViewModel
             ExecuteCommand = new RelayCommand(Execute);
             PreviousCommand = new RelayCommand(() => SelectedIndex = SelectedIndex == 0 ? 0 : SelectedIndex - 1);
             NextCommand = new RelayCommand(() => SelectedIndex = SelectedIndex == Results.Count - 1 ? Results.Count - 1 : SelectedIndex + 1);
-            SubCommand = new RelayCommand(FindSubCommands);
+            ChainCommand = new RelayCommand(FindSubCommands);
+            UnchainCommand = new RelayCommand(Unchain);
+            CommandsChain = new ObservableCollection<Command>();
+        }
+
+        private void Unchain()
+        {
+            if (CommandsChain.Count == 0)
+                return;
+            CommandsChain.RemoveAt(CommandsChain.Count - 1);
+            Input = String.Empty;
         }
 
         private void FindSubCommands()
         {
-            if (FindingSubCommands)
+            if (SelectedCommand == null)
                 return;
-            MasterCommand = SelectedCommand;
+            CommandsChain.Add(SelectedCommand);
             Input = String.Empty;
-            Results = _commandsManager.FindSubCommands(MasterCommand, Input);
+            Results = _commandsManager.FindSubCommands(CommandsChain[CommandsChain.Count - 1], Input);
         }
 
         private void Execute()
         {
             if (SelectedCommand != null)
                 _commandsManager.ExecuteCommand(SelectedCommand);
-            MasterCommand = null;
+            CommandsChain.Clear();
             Input = String.Empty;
         }
 
@@ -64,7 +75,7 @@ namespace RRLauncher.ViewModel
         {
             if (FindingSubCommands)
             {
-                Results = _commandsManager.FindSubCommands(MasterCommand, Input);
+                Results = _commandsManager.FindSubCommands(CommandsChain[CommandsChain.Count - 1], Input);
             }
             else
             {
@@ -95,14 +106,14 @@ namespace RRLauncher.ViewModel
             set { Set(ref _selectedIndex, value); }
         }
 
-        public bool FindingSubCommands => MasterCommand != null;
+        public bool FindingSubCommands => CommandsChain.Count > 0;
 
-        private Command _masterCommand;
+        private ObservableCollection<Command> _commandsChain;
 
-        public Command MasterCommand
+        public ObservableCollection<Command> CommandsChain
         {
-            get { return _masterCommand; }
-            set { Set(ref _masterCommand, value); }
+            get { return _commandsChain; }
+            set { Set(ref _commandsChain, value); }
         }
     }
 }
